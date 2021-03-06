@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>小说</title>
+    <!--<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/1.4.0/css/bootstrap.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        .img-responsive {
+            display: block;
+            height: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body class="container">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li th:class="${cateId==''}?'active' : ''"><a href="/">首页</a></li>
+            <li th:class="${cateId=='1'}?'active' : ''"><a th:href="'/list?cateId=1'">玄幻奇幻</a></li>
+            <li th:class="${cateId=='2'}?'active' : ''"><a th:href="'/list?cateId=2'">仙侠修真</a></li>
+            <li th:class="${cateId=='3'}?'active' : ''"><a th:href="'/list?cateId=3'">都市言情</a></li>
+            <li th:class="${cateId=='4'}?'active' : ''"><a th:href="'/list?cateId=4'">历史军事</a></li>
+            <li th:class="${cateId=='6'}?'active' : ''"><a th:href="'/list?cateId=6'">网游竞技</a></li>
+            <li th:class="${cateId=='7'}?'active' : ''"><a th:href="'/list?cateId=7'">科幻灵异</a></li>
+            <li th:class="${cateId=='8'}?'active' : ''"><a th:href="'/list?cateId=8'">恐怖灵异</a></li>
+            <li th:class="${cateId=='9'}?'active' : ''"><a th:href="'/list?cateId=9'">其他类型</a></li>
+            <li><a th:href="'/maici'">另类麦词</a></li>
+        </ul>
+        <form id="form-search" class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+                <input type="text" id="key" class="form-control" placeholder="Search" th:value="${search}">
+            </div>
+            <button type="submit" class="btn btn-default">搜索</button>
+        </form>
+    </div>
+</nav>
+
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+</ol>
+
+<div class="table-responsive with:80%">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>封面</th>
+            <th>名称</th>
+            <th>描述</th>
+            <th>分类名称</th>
+            <th>作者</th>
+            <th>最新章节标题</th>
+            <th>最新章节时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="novel, itemStat : ${novels.list}">
+            <th scope="row" th:text="${itemStat.index + 1}">1</th>
+            <td height="100px" width="100px">
+                <img class="img-responsive" th:src="'/' + ${novel.cover}">
+            </td>
+            <td>
+                <a th:href="@{'/book_'+ ${novel.novId}}" th:text="${novel.name}"></a>
+            </td>
+            <td th:utext="${novel.desc}">6</td>
+            <td th:text="${novel.cateName}">6</td>
+            <td th:text="${novel.author}">6</td>
+            <td>
+                <a th:href="@{'/book_'+ ${novel.novId} + '/'+ ${novel.chapterId}}" th:text="${novel.chapterTitle}"></a>
+            </td>
+            <td th:text="${#dates.format(novel.chapterUpdatedAt, 'yyyy-MM-dd HH:mm:ss')}">6</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<nav aria-label="modal-footer no-margin-top">
+    <ul class="pagination pagination-sm pull-right no-margin">
+        <!-- 首页 -->
+        <li th:class="${novels.currentPage==1}?'disabled' : ''" >
+            <a aria-label="Previous" th:href="'/list?pageNum=1'+'&cateId='+ ${cateId}+'&search='+${search}">首页</a>
+        </li>
+
+        <!-- 上一页 -->
+        <li th:switch="${novels.currentPage}" th:class="${novels.currentPage==1}?'disabled' : ''" >
+            <a th:case="1" href="#" th:text="上一页"></a>
+            <!--<a th:case="2" th:href="'/list?pageNum=' + ${novels.getCurrentPage()}" th:text="上一页"></a>-->
+            <a th:case="*" th:href="'/list?pageNum=' + ${novels.getCurrentPage()-1} +'&cateId='+ ${cateId}+'&search='+${search}" th:text="上一页"></a>
+        </li>
+
+        <!-- 中间页 -->
+        <!--<li th:each="pageNum:${#numbers.sequence(0, novels.getTotalPage() - 1)}">-->
+            <!--<a th:href="'/list?pageNum=' + ${pageNum}" th:text="${pageNum + 1}" th:if="${pageNum ne novels.getTotalPage()}"></a>-->
+            <!--<a th:href="'/list?pageNum=' + ${pageNum}" th:text="${pageNum + 1}" th:if="${pageNum eq novels.getTotalPage()}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+        <!--</li>-->
+
+        <li th:if="${novels.currentPage-3 >=1}" ><a th:href="@{'/list?pageNum=' + ${novels.currentPage-3}+'&cateId='+ ${cateId}+'&search='+${search}}" th:text="${novels.currentPage -3}" >1</a></li>
+        <li th:if="${novels.currentPage-2 >=1}" ><a th:href="@{'/list?pageNum=' + ${novels.currentPage-2}+'&cateId='+ ${cateId}+'&search='+${search}}" th:text="${novels.currentPage -2}" >1</a></li>
+        <li th:if="${novels.currentPage-1 >=1}" ><a th:href="@{'/list?pageNum=' + ${novels.currentPage-1}+'&cateId='+ ${cateId}+'&search='+${search}}" th:text="${novels.currentPage -1}" >1</a></li>
+        <li class="active"><a href="#" th:text="${novels.currentPage}" >1</a></li>
+        <li th:if="${novels.currentPage+1 <=novels.getTotalPage()}" ><a th:href="@{'/list?pageNum=' + ${novels.currentPage+1}+'&cateId='+ ${cateId}+'&search='+${search}}" th:text="${novels.currentPage +1}" >1</a></li>
+        <li th:if="${novels.currentPage+2 <=novels.getTotalPage()}" ><a th:href="@{'/list?pageNum=' + ${novels.currentPage+2}+'&cateId='+ ${cateId}+'&search='+${search}}" th:text="${novels.currentPage +2}" >1</a></li>
+        <li th:if="${novels.currentPage+3 <=novels.getTotalPage()}" ><a th:href="@{'/list?pageNum=' + ${novels.currentPage+3}+'&cateId='+ ${cateId}+'&search='+${search}}" th:text="${novels.currentPage +3}" >1</a></li>
+
+        <!-- 下一页 -->
+        <li th:switch="${novels.currentPage}" th:class="${novels.currentPage == novels.getTotalPage()}?'disabled' : ''">
+            <a th:case="${novels.getTotalPage()}" href="#" th:text="下一页"></a>
+            <a th:case="*" th:href="'/list?pageNum=' + ${novels.getCurrentPage()+1}+'&cateId='+ ${cateId}+'&search='+${search}" th:text="下一页"></a>
+        </li>
+
+        <!-- 尾页 -->
+        <li th:class="${novels.currentPage == novels.getTotalPage()}?'disabled' : ''">
+            <a aria-label="Next" th:href="'/list?pageNum=' + ${novels.getTotalPage()}+'&cateId='+ ${cateId}+'&search='+${search}">尾页</a>
+        </li>
+
+    </ul>
+</nav>
+<script type="text/javascript">
+    $("#form-search").submit(function(){
+        var search = $("#key").val();
+        var url1 = '/list?search='+search;
+        location.assign(url1)
+        return false;
+    });
+
+</script>
+</body>
+</html>

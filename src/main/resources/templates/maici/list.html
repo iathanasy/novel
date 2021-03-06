@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>麦词</title>
+    <!--<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/1.4.0/css/bootstrap.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        .img-responsive {
+            display: block;
+            height: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body class="container">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li th:class="${cateId==''}?'active' : ''"><a href="/">首页</a></li>
+            <li th:class="${cateId=='1'}?'active' : ''"><a th:href="'/list?cateId=1'">玄幻奇幻</a></li>
+            <li th:class="${cateId=='2'}?'active' : ''"><a th:href="'/list?cateId=2'">仙侠修真</a></li>
+            <li th:class="${cateId=='3'}?'active' : ''"><a th:href="'/list?cateId=3'">都市言情</a></li>
+            <li th:class="${cateId=='4'}?'active' : ''"><a th:href="'/list?cateId=4'">历史军事</a></li>
+            <li th:class="${cateId=='6'}?'active' : ''"><a th:href="'/list?cateId=6'">网游竞技</a></li>
+            <li th:class="${cateId=='7'}?'active' : ''"><a th:href="'/list?cateId=7'">科幻灵异</a></li>
+            <li th:class="${cateId=='8'}?'active' : ''"><a th:href="'/list?cateId=8'">恐怖灵异</a></li>
+            <li th:class="${cateId=='9'}?'active' : ''"><a th:href="'/list?cateId=9'">其他类型</a></li>
+            <li th:class="${maicis != null}?'active' : ''"><a th:href="'/maici'">另类麦词</a></li>
+        </ul>
+        <form id="form-search" class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+                <input type="text" id="key" class="form-control" placeholder="Search" th:value="${search}">
+            </div>
+            <button type="submit" class="btn btn-default">搜索</button>
+        </form>
+    </div>
+</nav>
+
+<ol class="breadcrumb">
+    <li><a href="/maici">首页</a></li>
+</ol>
+
+<div class="table-responsive with:80%">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>名称</th>
+            <th>时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="maici, itemStat : ${maicis.list}">
+            <th scope="row" th:text="${itemStat.index + 1}">1</th>
+
+            <td>
+                <a th:href="@{'/maici/details_'+ ${maici._id}}" th:text="${maici.title}"></a>
+            </td>
+
+            <td th:text="${maici.time}">6</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<nav aria-label="modal-footer no-margin-top">
+    <ul class="pagination pagination-sm pull-right no-margin">
+        <!-- 首页 -->
+        <li th:class="${maicis.currentPage==1}?'disabled' : ''" >
+            <a aria-label="Previous" th:href="'/maici/list?pageNum=1'+'&search='+${search}">首页</a>
+        </li>
+
+        <!-- 上一页 -->
+        <li th:switch="${maicis.currentPage}" th:class="${maicis.currentPage==1}?'disabled' : ''" >
+            <a th:case="1" href="#" th:text="上一页"></a>
+            <!--<a th:case="2" th:href="'/list?pageNum=' + ${maicis.getCurrentPage()}" th:text="上一页"></a>-->
+            <a th:case="*" th:href="'/maici/list?pageNum=' + ${maicis.getCurrentPage()-1} +'&search='+${search}" th:text="上一页"></a>
+        </li>
+
+        <li th:if="${maicis.currentPage-3 >=1}" ><a th:href="@{'/maici/list?pageNum=' + ${maicis.currentPage-3}+'&search='+${search}}" th:text="${maicis.currentPage -3}" >1</a></li>
+        <li th:if="${maicis.currentPage-2 >=1}" ><a th:href="@{'/maici/list?pageNum=' + ${maicis.currentPage-2}+'&search='+${search}}" th:text="${maicis.currentPage -2}" >1</a></li>
+        <li th:if="${maicis.currentPage-1 >=1}" ><a th:href="@{'/maici/list?pageNum=' + ${maicis.currentPage-1}+'&search='+${search}}" th:text="${maicis.currentPage -1}" >1</a></li>
+        <li class="active"><a href="#" th:text="${maicis.currentPage}" >1</a></li>
+        <li th:if="${maicis.currentPage+1 <=maicis.getTotalPage()}" ><a th:href="@{'/maici/list?pageNum=' + ${maicis.currentPage+1}+'&search='+${search}}" th:text="${maicis.currentPage +1}" >1</a></li>
+        <li th:if="${maicis.currentPage+2 <=maicis.getTotalPage()}" ><a th:href="@{'/maici/list?pageNum=' + ${maicis.currentPage+2}+'&search='+${search}}" th:text="${maicis.currentPage +2}" >1</a></li>
+        <li th:if="${maicis.currentPage+3 <=maicis.getTotalPage()}" ><a th:href="@{'/maici/list?pageNum=' + ${maicis.currentPage+3}+'&search='+${search}}" th:text="${maicis.currentPage +3}" >1</a></li>
+
+        <!-- 下一页 -->
+        <li th:switch="${maicis.currentPage}" th:class="${maicis.currentPage == maicis.getTotalPage()}?'disabled' : ''">
+            <a th:case="${maicis.getTotalPage()}" href="#" th:text="下一页"></a>
+            <a th:case="*" th:href="'/maici/list?pageNum=' + ${maicis.getCurrentPage()+1}+'&search='+${search}" th:text="下一页"></a>
+        </li>
+
+        <!-- 尾页 -->
+        <li th:class="${maicis.currentPage == maicis.getTotalPage()}?'disabled' : ''">
+            <a aria-label="Next" th:href="'/maici/list?pageNum=' + ${maicis.getTotalPage()}+'&search='+${search}">尾页</a>
+        </li>
+
+    </ul>
+</nav>
+<script type="text/javascript">
+    $("#form-search").submit(function(){
+        var search = $("#key").val();
+        var url1 = '/maici/list?search='+search;
+        location.assign(url1)
+        return false;
+    });
+
+</script>
+</body>
+</html>

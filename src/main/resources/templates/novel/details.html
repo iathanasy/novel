@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${novel.name} + '-' + ${chapter.title} + '小说内容'"></title>
+    <!--<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/1.4.0/css/bootstrap.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: url(../../static/img/read_bg.png) #ede7da !important;
+            color: #333 !important;
+            font-family: "Microsoft YaHei" !important;
+        }
+
+        .all-content{
+            width: 90% !important;
+            box-shadow: 0 0 15px 0 #CCC;
+            background: #F6F4EC;
+            margin: 0 auto 30px;
+            border-radius: 3px;
+            min-height: 600px;
+            margin-bottom: 70px;
+            border: 1px solid #d8d8d8;
+            background: url(../../static/img/read_content.png) !important;
+        }
+
+        .title {
+            position: relative;
+        }
+
+        .title > h2 {
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .show-content{
+            white-space: pre-line;
+            width: 95%;
+            line-height: 2.4;
+            font-size: 16px !important;
+            padding-top: 16px;
+            min-height: 360px;
+            margin-left: 3%;
+            word-break: break-all;
+            font-family: "Microsoft YaHei";
+            text-align: left;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="container">
+
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li><a th:href="@{'/book_'+${novel.novId}}" th:text="${novel.name}"></a></li>
+    <li class="active" th:text="${chapter.title}"></li>
+</ol>
+
+<div class="all-content">
+    <div class="title">
+        <h2 id="chapter-title" th:text="${chapter.title}"></h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12 show-content" th:utext="${chapter.desc}"></div>
+
+    </div>
+</div>
+<ul class="pager">
+    <li class="previous">
+        <a th:if="${pre == null}" th:href="@{'/book_'+${novel.novId}+'/'}"><span aria-hidden="true">&larr;</span> 没有了 </a>
+        <a th:if="${pre != null}" th:href="@{'/book_'+${pre.novId}+'/'+${pre.chapterId}}" th:text="${pre.title}"><span aria-hidden="true">&larr;</span> 没有了 </a>
+    </li>
+    <li class="next">
+        <a th:if="${next == null}" th:href="@{'/book_'+${novel.novId}+'/'}"><span aria-hidden="true">&rarr;</span> 没有了 </a>
+        <a th:if="${next != null}" th:href="@{'/book_'+${next.novId}+'/'+${next.chapterId}}" th:text="${next.title}"><span aria-hidden="true">&rarr;</span> 没有了 </a>
+    </li>
+</ul>
+</body>
+</html>

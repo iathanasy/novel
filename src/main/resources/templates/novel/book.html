@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${novel.name} + '小说章节'"></title>
+    <!--<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/1.4.0/css/bootstrap.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #E5E4DB !important
+        }
+
+        .all-chapter{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="container">
+
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li class="active" th:text="${novel.name}"></li>
+</ol>
+
+    <h2 th:text="${novel.name}"></h2>
+
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-4 all-chapter" th:each="c,s : ${chapters}">
+            <a th:href="@{'/book_'+${novel.novId}+'/'+${c.chapterId}}" th:text="${c.title}"></a>
+        </div>
+    </div>
+</body>
+</html>
